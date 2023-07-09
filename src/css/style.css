@@ -1,0 +1,206 @@
+:root {
+  --font-color-dark: #0f0f0f;
+  --font-color-grey: #adadad;
+  --font-color-light: white;
+  --heading-font-size: 1.25rem;
+  --font-bold: 600;
+  --margin-from-header: calc(var(--header-height) + 2rem);
+  --hover-border-radius: 5px;
+
+  --header-bg-color: #db4c3f;
+  --header-height: 2.75rem;
+  --header-icon-size: 1.75rem;
+  --icon-hover-color-invert: rgba(0, 0, 0, 0.3); /* Black because of invert */
+  --icon-hover-color: rgba(255, 255, 255, 0.3);
+  --icon-border-radius: 5px;
+
+  --sidebar-bg-color: #fafafa;
+  --sidebar-width: 17.5rem;
+  --sidebar-icon-size: 1.5rem;
+  --sidebar-item-hover-color: #ededed;
+  /* #16974b */
+  --sidebar-icon-green-filter: invert(37%) sepia(94%) saturate(434%) hue-rotate(92deg) brightness(103%) contrast(86%);
+  /* #504485 */
+  --sidebar-icon-purple-filter: invert(30%) sepia(26%) saturate(1156%) hue-rotate(211deg) brightness(90%) contrast(93%);;
+  
+  --main-bg-color: white;
+  --main-checkbox-icon-size: 1rem;
+  --main-font-size: 0.85rem;
+}
+
+* {
+  margin: 0;
+  /* border: 1px solid red; */
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* Header Styling */
+#header {
+  background-color: var(--header-bg-color);
+  height: var(--header-height);
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 1.25rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  height: var(--header-icon-size);
+  filter: invert(100%);
+}
+
+.header-icon:hover {
+  cursor: pointer;
+  background-color: var(--icon-hover-color-invert);
+  border-radius: var(--icon-border-radius);
+}
+
+.header-search-bar {
+  display: flex;
+  align-items: center;
+  max-width: 11.75rem;
+}
+
+input[type="search"] {
+  background-color: var(--icon-hover-color);
+  color: var(--font-color-light);
+  height: var(--header-icon-size);
+  width: 100%;
+  border: 0;
+  border-radius: 5px;
+  padding: 0 1rem 0 2.5rem;
+}
+
+input[type="search"] + img {
+  position: absolute;
+  padding-left: 0.5rem;
+  height: calc(var(--header-icon-size) - 5px);
+  filter: invert(100%);
+}
+
+input[type="search"]::placeholder {
+  color: var(--font-color-light);
+}
+
+input[type="search"]:hover,
+input[type="search"]:focus {
+  background-color: white;
+  color: var(--font-color-grey);
+  outline: none;
+  border: 0;
+}
+
+input[type="search"]:hover::placeholder,
+input[type="search"]:focus::placeholder {
+  color: var(--font-color-grey);
+}
+
+input[type="search"]:hover + img,
+input[type="search"]:focus + img {
+  filter: none;
+}
+
+
+/* Sidebar Styling */
+#sidebar {
+  background-color: var(--sidebar-bg-color);
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
+  padding: var(--margin-from-header) 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebar-project-header {
+  color: var(--font-color-grey);
+  font-weight: var(--font-bold);
+  margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.sidebar-project-item {
+  color: var(--font-color-dark);
+  font-size: var(--main-font-size);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.sidebar-project-item:hover {
+  cursor: pointer;
+  background-color: var(--sidebar-item-hover-color);
+  border-radius: var(--hover-border-radius);
+}
+
+.sidebar-project-icon {
+  height: var(--sidebar-icon-size);
+}
+
+.sidebar-project-task-count {
+  flex: 1;
+  text-align: right;
+  color: var(--font-color-grey);
+}
+
+
+/* Main Section Styling */
+#main-content-section {
+  padding: var(--margin-from-header) 10rem var(--margin-from-header) calc(var(--sidebar-width) + 10rem);
+  font-size: var(--main-font-size);
+}
+
+#main-content-section .main-project-name {
+  font-size: var(--heading-font-size);
+  font-weight: var(--font-bold);
+  margin-bottom: 0.5rem;
+}
+
+.main-task-divider {
+  content: '';
+  background-color: var(--sidebar-item-hover-color);
+  height: 1px;
+  width: 100%;
+}
+
+.main-add-task {
+  color: var(--font-color-grey);
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.25rem;
+}
+
+.main-add-task:hover {
+  cursor: pointer;
+  background-color: var(--sidebar-item-hover-color);
+  border-radius: var(--hover-border-radius);
+}
+
+.main-add-task img {
+  height: var(--main-checkbox-icon-size);
+}
