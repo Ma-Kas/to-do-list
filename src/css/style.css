@@ -1,4 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600&display=swap');
+
+
 :root {
+  --main-font: 'Noto Sans', sans-serif;
   --font-color-dark: #0f0f0f;
   --font-color-grey: #adadad;
   --font-color-light: white;
@@ -29,6 +33,7 @@
 }
 
 * {
+  font-family: var(--main-font);
   margin: 0;
   /* border: 1px solid red; */
   padding: 0;
@@ -114,15 +119,16 @@ input[type="search"]:focus + img {
   filter: none;
 }
 
+.content-window {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  height: 100vh;
+}
 
 /* Sidebar Styling */
 #sidebar {
   background-color: var(--sidebar-bg-color);
-  position: fixed;
   z-index: 1;
-  top: 0;
-  bottom: 0;
-  left: 0;
   width: var(--sidebar-width);
   max-width: var(--sidebar-width);
   padding: var(--margin-from-header) 0.75rem;
@@ -138,7 +144,8 @@ input[type="search"]:focus + img {
   padding-left: 0.5rem;
 }
 
-.sidebar-project-item {
+.sidebar-project-item,
+.sidebar-add-project {
   color: var(--font-color-dark);
   font-size: var(--main-font-size);
   display: flex;
@@ -148,7 +155,13 @@ input[type="search"]:focus + img {
   padding: 0.25rem 0.5rem;
 }
 
-.sidebar-project-item:hover {
+.sidebar-add-project {
+  color: var(--font-color-grey);
+  margin-left: 1rem;
+}
+
+.sidebar-project-item:hover,
+.sidebar-add-project:hover {
   cursor: pointer;
   background-color: var(--sidebar-item-hover-color);
   border-radius: var(--hover-border-radius);
@@ -158,23 +171,54 @@ input[type="search"]:focus + img {
   height: var(--sidebar-icon-size);
 }
 
+.sidebar-add-project-icon {
+  height: var(--main-checkbox-icon-size);
+}
+
 .sidebar-project-task-count {
   flex: 1;
   text-align: right;
   color: var(--font-color-grey);
 }
 
+.sidebar-project-selected {
+  background-color: var(--sidebar-item-hover-color);
+  border-radius: var(--hover-border-radius);
+}
+
+.sidebar-my-projects {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 
 /* Main Section Styling */
 #main-content-section {
-  padding: var(--margin-from-header) 10rem var(--margin-from-header) calc(var(--sidebar-width) + 10rem);
+  padding: var(--margin-from-header) 10rem 10rem;
   font-size: var(--main-font-size);
+}
+
+#main-content-section .main-project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #main-content-section .main-project-name {
   font-size: var(--heading-font-size);
   font-weight: var(--font-bold);
   margin-bottom: 0.5rem;
+}
+
+.main-remove-project-icon {
+  height: var(--sidebar-icon-size);
+}
+
+.main-remove-project-icon:hover {
+  cursor: pointer;
+  background-color: var(--sidebar-item-hover-color);
+  border-radius: var(--hover-border-radius);
 }
 
 .main-task-divider {
@@ -203,4 +247,79 @@ input[type="search"]:focus + img {
 
 .main-add-task img {
   height: var(--main-checkbox-icon-size);
+}
+
+
+/* Add Task Modal Styling */
+.create-task {
+  position: relative;
+  top: -2rem;
+  background-color: var(--main-bg-color);
+  width: 100%;
+  border: 1px solid var(--font-color-grey);
+  border-radius: var(--hover-border-radius);
+  padding: 1rem;
+  display: none;
+  flex-direction: column;
+  justify-items: center;
+  gap: 0.5rem;
+}
+
+.create-task-btns {
+  align-self: flex-end;
+}
+
+.create-task input[type="text"] {
+  border: none;
+}
+
+.create-task input[type="text"]::placeholder {
+  color: var(--font-color-grey);
+}
+
+.create-task input[type="text"]:focus {
+  outline: none;
+}
+
+.create-task input[type="text"]:first-child {
+  font-weight: var(--font-bold);
+}
+
+.create-task-date-priority,
+.create-task-btns {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.create-task-date-priority input,
+.create-task-date-priority select {
+  background-color: rgba(255, 255, 255, 0);
+  color: var(--font-color-grey);
+  height: 100%;
+  border-radius: var(--hover-border-radius);
+  border: 1px solid var(--font-color-grey);
+  padding: 0.5rem;
+}
+
+.create-task-date-priority input:focus,
+.create-task-date-priority select:focus {
+  outline: none;
+}
+
+button {
+  font-weight: var(--font-bold);
+  border: none;
+  border-radius: var(--hover-border-radius);
+  padding: 0.5rem 1rem;
+}
+
+button:hover {
+  scale: 105%;
+}
+
+#create-task-btn {
+  color: var(--font-color-light);
+  background-color: var(--header-bg-color);
 }

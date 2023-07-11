@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>To-Do List</title>
 
-  <script src="./bundle.js" defer></script>
+  <script src="../src/js/index.js" defer></script>
   <link rel="stylesheet" href="../src/css/style.css">
 </head>
 
@@ -18,7 +18,7 @@
         <img class="header-icon" src="../src/img/home.svg" alt="Home Button">
         <div class="header-search-bar">
           <input type="search" name="search" id="search" placeholder="Search" autocomplete="off">
-          <img class="search-icon" src="../src/img/search.svg" alt="Search Button">
+          <img class="search-icon" src="../src/img/search.svg">
         </div>
 
       </div>
@@ -27,43 +27,52 @@
         <img class="header-icon" src="../src/img/account.svg" alt="My Account">
       </div>
     </div>
-    <div id="sidebar">
-      <div class="sidebar-constant-section">
-        <div class="sidebar-project-item" data-projectID="general">
-          <img class="sidebar-project-icon" src="../src/img/general.svg" alt="General Icon">
-          <div class="sidebar-project-name">General</div>
-          <div class="sidebar-project-task-count">5</div>
+    <div class="content-window">
+      <div id="sidebar">
+        <div class="sidebar-default-section">
         </div>
-
-        <div class="sidebar-project-item" data-projectID="today">
-          <img class="sidebar-project-icon" src="../src/img/today_calendar.svg" alt="Today Icon">
-          <div class="sidebar-project-name">Today</div>
-          <div class="sidebar-project-task-count">5</div>
-        </div>
-
-        <div class="sidebar-project-item" data-projectID="upcoming">
-          <img class="sidebar-project-icon" src="../src/img/calendar.svg" alt="Upcoming Icon">
-          <div class="sidebar-project-name">Upcoming</div>
-          <div class="sidebar-project-task-count">5</div>
+        <div class="sidebar-project-section">
+          <div class="sidebar-my-projects">
+            <div class="sidebar-project-header">My Projects</div>
+            <div class="sidebar-add-project">
+              <img class="sidebar-add-project-icon" src="../src/img/add.svg">
+              <div>New</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="sidebar-project-section">
-        <div class="sidebar-project-header">My Projects</div>
-        <div class="sidebar-project-item" data-projectID="godot4">
-          <img class="sidebar-project-icon" src="../src/img/square.svg" alt="Square Icon">
-          <div class="sidebar-project-name">Godot 4</div>
-          <div class="sidebar-project-task-count">5</div>
+      <div id="main-content-section">
+        <div class="main-project-header">
+          <div class="main-project-name" data-project-id="general">General</div>
+          <img class="main-remove-project-icon" src="../src/img/delete.svg">
         </div>
-      </div>
-    </div>
+        <div class="main-task-overview">
+        </div>
+        <div class="main-task-divider"></div>
+        <div class="main-add-task">
+          <img class="main-checkbox-icon" src="../src/img/add.svg">
+          <div>Add task</div>
+        </div>
 
-    <div id="main-content-section">
-      <div class="main-project-name" data-projectID="godot4">Godot 4</div>
-      <div class="main-task-divider"></div>
-      <div class="main-add-task">
-        <img class="main-checkbox-icon" src="../src/img/add.svg" alt="Add Task Button">
-        <div>Add task</div>
+        <form class="create-task" method="post">
+          <input type="text" name="title" id="title" placeholder="Task Name" autocomplete="off" required>
+          <input type="text" name="description" id="description" placeholder="Description" autocomplete="off">
+          <div class="create-task-date-priority">
+            <input type="date" name="date" id="date" required>
+            <select name="priority" id="priority" required>
+              <option value="" disabled selected>Priority</option>
+              <option value="1">Priority 1</option>
+              <option value="2">Priority 2</option>
+              <option value="3">Priority 3</option>
+            </select>
+          </div>
+          <div class="main-task-divider"></div>
+          <div class="create-task-btns">
+            <button id="cancel-task-btn">Cancel</button>
+            <button id="create-task-btn" type="click">Add Task</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

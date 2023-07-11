@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+
+  <script src="../src/js/index.js" defer></script>
+  <link rel="stylesheet" href="../src/css/style.css">
+</head>
+
+<body>
+  <div class="content" id="content">
+    <div id="header">
+      <div class="header-left">
+        <img class="header-icon" src="../src/img/menu.svg" alt="Burger Menu">
+        <img class="header-icon" src="../src/img/home.svg" alt="Home Button">
+        <div class="header-search-bar">
+          <input type="search" name="search" id="search" placeholder="Search" autocomplete="off">
+          <img class="search-icon" src="../src/img/search.svg">
+        </div>
+
+      </div>
+      <div class="header-right">
+        <img class="header-icon" src="../src/img/add.svg" alt="Add Task Button">
+        <img class="header-icon" src="../src/img/account.svg" alt="My Account">
+      </div>
+    </div>
+    <div id="sidebar">
+      <div class="sidebar-constant-section">
+        <div class="sidebar-project-item" data-projectID="general">
+          <img class="sidebar-project-icon" src="../src/img/general.svg">
+          <div class="sidebar-project-name">General</div>
+          <div class="sidebar-project-task-count">5</div>
+        </div>
+
+        <div class="sidebar-project-item" data-projectID="today">
+          <img class="sidebar-project-icon" src="../src/img/today.svg">
+          <div class="sidebar-project-name">Today</div>
+          <div class="sidebar-project-task-count">5</div>
+        </div>
+
+        <div class="sidebar-project-item" data-projectID="upcoming">
+          <img class="sidebar-project-icon" src="../src/img/upcoming.svg">
+          <div class="sidebar-project-name">Upcoming</div>
+          <div class="sidebar-project-task-count">5</div>
+        </div>
+      </div>
+
+      <div class="sidebar-project-section">
+        <div class="sidebar-project-header">My Projects</div>
+        <div class="sidebar-project-item" data-projectID="godot4">
+          <img class="sidebar-project-icon" src="../src/img/square.svg">
+          <div class="sidebar-project-name">Godot 4</div>
+          <div class="sidebar-project-task-count">5</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-content-section">
+      <div class="main-project-name" data-projectID="general">General</div>
+      <div class="main-task-divider"></div>
+      <div class="main-add-task">
+        <img class="main-checkbox-icon" src="../src/img/add.svg">
+        <div>Add task</div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
