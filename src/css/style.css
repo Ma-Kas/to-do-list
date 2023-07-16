@@ -386,7 +386,8 @@ button:hover {
 
 
 /* New Project Modal Styling */
-.new-project-modal-container {
+.new-project-modal-container,
+.task-view-modal-container {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(2px);
@@ -439,4 +440,93 @@ button:hover {
 .add-project-btns {
   justify-self: flex-end;
   align-self: flex-end;
+}
+
+
+/* Task View Modal Styling */
+.task-view-modal {
+  background-color: white;
+  color: var(--font-color-dark);
+  font-size: var(--main-small-font-size);
+  height: 70vh;
+  aspect-ratio: 1.75 / 1;
+  border-radius: calc(var(--hover-border-radius) * 2);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.task-view-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--sidebar-item-hover-color);
+  padding: 0.5rem 1rem;
+}
+
+.task-view-modal-project-icon {
+  height: var(--main-checkbox-icon-size);
+}
+
+.task-view-modal-header-project,
+.task-view-modal-main-right-item-project,
+.task-view-modal-main-right-item-date,
+.task-view-modal-main-right-item-priority {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.task-view-modal-close-icon {
+  height: var(--header-icon-size);
+}
+
+.task-view-modal-close-icon:hover {
+  cursor: pointer;
+  background-color: var(--icon-hover-color-invert);
+  border-radius: var(--icon-border-radius);
+}
+
+.task-view-modal-main {
+  flex: 1;
+  display: flex;
+}
+
+.task-view-modal-main-left,
+.task-view-modal-main-right {
+  padding: 1.5rem;
+}
+
+.task-view-modal-main-left {
+  flex: 1;
+}
+
+.task-view-modal-main-right {
+  background-color: var(--sidebar-bg-color);
+  width: calc(var(--sidebar-width) * 0.8);
+  border-bottom-right-radius: calc(var(--hover-border-radius) * 2);
+}
+
+.task-view-modal-main-right-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.task-view-modal-main-right-item-header {
+  font-weight: var(--font-bold);
+}
+
+.task-view-modal-main-left-header {
+  font-size: var(--heading-font-size);
+  padding: 0.5rem 0;
+}
+
+.task-view-modal-main-left-description {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1rem;
 }

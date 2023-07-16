@@ -3,6 +3,9 @@ import {
   matchCorrectIcon, 
   getAddProjectFormValues, 
   getTaskFormValues,
+  getProjectFromId,
+  getTaskCount,
+  getCurrentTaskData,
   upcomingIcon,
   checkIcon,
 } from "./helpers";
@@ -12,11 +15,11 @@ let projectList = [];
 let taskItemList = [];
 
 class Project {
-  constructor(title, icon, taskCount) {
+  constructor(title) {
     this.title = title;
-    this.icon = icon;
+    this.icon = matchCorrectIcon(title.toLowerCase());
     this.id = title.toLowerCase();
-    this.taskCount = taskCount;
+    this.taskCount = getTaskCount(taskItemList, title.toLowerCase());
   }
 }
 
@@ -40,12 +43,13 @@ class TaskItem {
   return {}
 })();
 
-
 function setupEventListeners() {
   const sidebarAddProject = document.querySelector('.sidebar-add-project');
 
   const newProjectModalForm = document.querySelector('.new-project-modal');
   const cancelProjectBtn = document.getElementById('cancel-project-btn');
+
+  const taskViewModalCloseBtn = document.querySelector('.task-view-modal-close-icon');
 
   const mainAddTask = document.querySelector('.main-add-task');
   const createTaskForm = document.querySelector('.create-task');
@@ -89,16 +93,21 @@ function setupEventListeners() {
     toggleFormModalVisibility('.create-task');
     createTaskForm.reset()
   });
+
+  // Task View Modal Event Listeners
+  taskViewModalCloseBtn.addEventListener('click', (e) => {
+    toggleFormModalVisibility('.task-view-modal-container');
+  })
 }
 
 function newProject(title, defaultSection = false) {
-  const newProject = createProjectInstance(title, matchCorrectIcon(title), 0);
+  const newProject = createProjectInstance(title);
   createProjectDOM(newProject, defaultSection);
 }
 
 // Create new instance of Project class, add to projectList array
-function createProjectInstance(title, icon, taskCount) {
-  const newProject = new Project(title, icon, taskCount)
+function createProjectInstance(title) {
+  const newProject = new Project(title)
   projectList.push(newProject);
   return newProject;
 }
@@ -158,7 +167,7 @@ function onProjectSelect(selectedProjectDOM) {
 }
 
 function updateMainTaskView(selectedProjectDOM) {
-  const currentProject = getProjectFromId(selectedProjectDOM.dataset.projectId);
+  const currentProject = getProjectFromId(projectList, selectedProjectDOM.dataset.projectId);
 
   const mainContentSection = document.getElementById('main-content-section');
   const mainProjectName = document.querySelector('.main-project-name');
@@ -192,6 +201,7 @@ function createNewTaskDOM(title, description = '', dueDate, _priority = '', proj
 
   const divMainTaskItem = document.createElement('div');
   divMainTaskItem.classList.add('main-task-item');
+  divMainTaskItem.dataset.projectId = projectId;
 
   const imgMainTaskCheckIcon = document.createElement('img');
   imgMainTaskCheckIcon.classList.add('main-task-check-icon');
@@ -251,7 +261,8 @@ function createNewTaskDOM(title, description = '', dueDate, _priority = '', proj
   });
 
   divMainTaskItemContent.addEventListener('click', (e) => {
-    toggleTaskViewModal(e.target.closest('.main-task-item'));
+    setupTaskViewModal(e.target.closest('.main-task-item'));
+    toggleFormModalVisibility('.task-view-modal-container');
   })
 
 }
@@ -266,15 +277,36 @@ function completeTask(taskItem) {
   // TODO code to remove correct task from taskList array
 }
 
-function toggleTaskViewModal(taskItem) {
-  // make big modal
-  console.log(taskItem);
-}
+function setupTaskViewModal(taskItem) {
+  const task = getCurrentTaskData(taskItemList, taskItem);
+  const project = getProjectFromId(projectList, task.projectId);
 
-function getProjectFromId(projectId) {
-  for (let i = 0; i < projectList.length; i++) {
-    if (projectList[i].id === projectId) {
-      return projectList[i];
-    }
-  }
+  const headerProject = document.querySelector('.task-view-modal-header-project');
+  const headerProjectIcon = headerProject.querySelector(':scope > img');
+  const headerProjectTitle = headerProject.querySelector(':scope > div');
+
+  headerProjectIcon.src = project.icon;
+  headerProjectTitle.textContent = project.title;
+
+  const taskTitle = document.querySelector('.task-view-modal-main-left-header');
+  taskTitle.textContent = task.title;
+
+  const taskDescriptionContainer = document.querySelector('.task-view-modal-main-left-description');
+  const taskDescription = taskDescriptionContainer.querySelector(':scope > div');
+  taskDescription.textContent = (task.description === '') ? 'Description' : task.description;
+
+  const rightProject = document.querySelector('.task-view-modal-main-right-item-project');
+  const rightProjectIcon = rightProject.querySelector(':scope > img');
+  const rightProjectTitle = rightProject.querySelector(':scope > div');
+
+  rightProjectIcon.src = project.icon;
+  rightProjectTitle.textContent = project.title;
+
+  const rightDueDateContainer = document.querySelector('.task-view-modal-main-right-item-date');
+  const rightDueDate = rightDueDateContainer.querySelector(':scope > div');
+  rightDueDate.textContent = task.dueDate;
+
+  const rightPriorityContainer = document.querySelector('.task-view-modal-main-right-item-priority');
+  const rightPriority = rightPriorityContainer.querySelector(':scope > div');
+  rightPriority.textContent = `Priority ${task.priority}`;
 }
