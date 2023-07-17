@@ -4,6 +4,8 @@ import upcomingIcon from '../img/upcoming.svg';
 import blankIcon from '../img/blank.svg';
 import checkIcon from '../img/check.svg';
 
+import { format, } from 'date-fns';
+
 
 export function capitalizeFirstLetter(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
@@ -24,12 +26,18 @@ export function matchCorrectIcon(id) {
 
 export function getTaskFormValues(form) {
   const mainProjectName = document.querySelector('.main-project-name');
+  let projectId = mainProjectName.dataset.projectId;
+
+  if ((projectId === 'today') || (projectId === 'upcoming')) {
+    projectId = 'general';
+  }
+
   return {
     title: form.title.value,
     description: form.description.value,
-    date: form.date.value,
+    date: format(new Date(form.date.value), 'yyyy-MM-dd'),
     priority: form.priority.value,
-    project: mainProjectName.dataset.projectId,
+    project: projectId,
   }
 }
 
@@ -62,6 +70,12 @@ export function getCurrentTaskData(taskItemList, taskItem) {
     if ((taskItemList[i].title === title) && (taskItemList[i].projectId === projectId)) {
       return taskItemList[i];
     }
+  }
+}
+
+export function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
   }
 }
 

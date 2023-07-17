@@ -6,9 +6,12 @@ import {
   getProjectFromId,
   getTaskCount,
   getCurrentTaskData,
+  removeAllChildNodes,
   upcomingIcon,
   checkIcon,
 } from "./helpers";
+
+import { format, parseISO, isWithinInterval, addDays, add, } from 'date-fns';
 
 
 let projectList = [];
@@ -90,6 +93,7 @@ function setupEventListeners() {
     const taskData = getTaskFormValues(createTaskForm);
     createNewTaskInstance(taskData.title, taskData.description, taskData.date, taskData.priority, taskData.project);
     createNewTaskDOM(taskData.title, taskData.description, taskData.date, taskData.priority, taskData.project);
+    updateSidebarTaskCount();
     toggleFormModalVisibility('.create-task');
     createTaskForm.reset()
   });
@@ -169,12 +173,89 @@ function onProjectSelect(selectedProjectDOM) {
 function updateMainTaskView(selectedProjectDOM) {
   const currentProject = getProjectFromId(projectList, selectedProjectDOM.dataset.projectId);
 
-  const mainContentSection = document.getElementById('main-content-section');
   const mainProjectName = document.querySelector('.main-project-name');
   const mainTaskOverview = document.querySelector('.main-task-overview');
 
   mainProjectName.textContent = currentProject.title;
   mainProjectName.dataset.projectId = currentProject.id;
+
+  // Clear task view
+  removeAllChildNodes(mainTaskOverview);
+
+  // Populate task view with all tasks for current project
+  switch (currentProject.id) {
+    case 'today' :
+      // Display tasks with dueDate today
+      taskItemList.forEach(task => {
+        if (task.dueDate === format(new Date(), 'yyyy-MM-dd')) {
+          createNewTaskDOM(task.title, task.description, task.dueDate, task.priority, task.projectId);
+        }
+      });
+      break;
+    
+    case 'upcoming' :
+      // Display tasks with dueDate 7 days from tomorrow
+      taskItemList.forEach(task => {
+        if (isWithinInterval(new Date(parseISO(task.dueDate)), {
+          start: new Date(),
+          end: addDays(new Date(), 7)
+        }) === true) {
+          createNewTaskDOM(task.title, task.description, task.dueDate, task.priority, task.projectId);
+        }
+      });
+      break;
+    
+    default :
+      taskItemList.forEach(task => {
+        if (task.projectId === currentProject.id) {
+          createNewTaskDOM(task.title, task.description, task.dueDate, task.priority, task.projectId);
+        }
+      });
+  }
+
+}
+
+// When adding or deleting task, update count in sidebar
+function updateSidebarTaskCount() {
+  const projectItems = document.querySelectorAll('.sidebar-project-item');
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+
+  projectItems.forEach(project => {
+    const id = project.dataset.projectId;
+    const taskCountDOM = project.querySelector('.sidebar-project-task-count');
+    let taskCount = 0;
+
+    switch (id) {
+      case 'today' :
+        // Count all tasks with dueDate today
+        taskItemList.forEach(task => {
+          if (task.dueDate === today) {
+            taskCount++;
+          }
+        });
+        break;
+      case 'upcoming' :
+        // Count all tasks with dueDate 7 days from tomorrow
+        taskItemList.forEach(task => {
+          if (isWithinInterval(new Date(parseISO(task.dueDate)), {
+            start: new Date(),
+            end: addDays(new Date(), 7)
+          }) === true) {
+            taskCount++;
+          }
+        });
+        break;
+      default :
+        // Count all tasks associated with said projectId
+        taskItemList.forEach(task => {
+          if (task.projectId === id) {
+            taskCount++;
+          }
+        });
+    }
+    taskCountDOM.textContent = taskCount;
+  });
 }
 
 function toggleFormModalVisibility(className) {
@@ -193,7 +274,7 @@ function createNewTaskDOM(title, description = '', dueDate, _priority = '', proj
   const mainTaskOverview = document.querySelector('.main-task-overview');
 
   // Create a divider if other tasks are present in list
-  if (mainTaskOverview.hasChildNodes() === true) {
+  if (mainTaskOverview.querySelector('.main-task-item') !== null) {
     const divMainTaskDivider = document.createElement('div');
     divMainTaskDivider.classList.add('main-task-divider');
     mainTaskOverview.appendChild(divMainTaskDivider);
@@ -267,14 +348,22 @@ function createNewTaskDOM(title, description = '', dueDate, _priority = '', proj
 
 }
 
-// Remove
+// Remove selected task from DOM and taskItemList array, update sidebar
 function completeTask(taskItem) {
-  if (taskItem.previousElementSibling.classList.contains('main-task-divider')) {
-    taskItem.previousElementSibling.remove();
-  };
+  // Logic to remove divider line as well, if present
+  if (taskItem.previousElementSibling !== null) {
+    if (taskItem.previousElementSibling.classList.contains('main-task-divider')) {
+      taskItem.previousElementSibling.remove();
+    }
+  }
+ 
   taskItem.remove();
 
-  // TODO code to remove correct task from taskList array
+  const task = getCurrentTaskData(taskItemList, taskItem);
+  const index = taskItemList.indexOf(task);
+  taskItemList.splice(index, 1);
+
+  updateSidebarTaskCount();
 }
 
 function setupTaskViewModal(taskItem) {

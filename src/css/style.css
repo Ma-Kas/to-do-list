@@ -284,6 +284,9 @@ input[type="search"]:focus + img {
   background-color: var(--sidebar-item-hover-color);
   height: 1px;
   width: 100%;
+}
+
+#main-content-section .main-task-divider {
   margin: 0.5rem 0;
 }
 
