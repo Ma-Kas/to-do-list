@@ -38,7 +38,6 @@ class TaskItem {
   }
 }
 
-
 const projectController = (() => {
   function newProject(title, defaultSection = false) {
     const newProject = _createProjectInstance(title);
@@ -49,6 +48,9 @@ const projectController = (() => {
   function _createProjectInstance(title) {
     const newProject = new Project(title)
     projectList.push(newProject);
+
+    storageController.updateProjectListStorage();
+
     return newProject;
   }
 
@@ -93,6 +95,8 @@ const projectController = (() => {
   function deleteProject(projectToDelete) {
     const index = projectList.indexOf(projectToDelete);
     projectList.splice(index, 1);
+
+    storageController.updateProjectListStorage();
     
     const sidebarProjectSection = document.querySelector('.sidebar-project-section');
     const projects = sidebarProjectSection.querySelectorAll('.sidebar-project-item');
@@ -114,6 +118,8 @@ const taskController = (() => {
   function createNewTaskInstance(title, description = '', dueDate, priority = '', projectId) {
     const newTask = new TaskItem(title, description, dueDate, priority, projectId);
     taskItemList.push(newTask);
+
+    storageController.updateTaskListStorage();
   }
 
   // Populate the DOM and add event listeners to new elements
@@ -210,6 +216,8 @@ const taskController = (() => {
     const index = taskItemList.indexOf(task);
     taskItemList.splice(index, 1);
 
+    storageController.updateTaskListStorage();
+
     viewController.updateSidebarTaskCount();
   }
 
@@ -220,6 +228,8 @@ const taskController = (() => {
         taskItemList.splice(index, 1);
       }
     });
+    
+    storageController.updateTaskListStorage();
   }
 
   return {
@@ -382,8 +392,35 @@ const viewController = (() => {
   }
 })();
 
+const storageController = (() => {
+  function updateProjectListStorage() {
+    localStorage.setItem('projectList', JSON.stringify(projectList));
+  }
+
+  function updateTaskListStorage() {
+    localStorage.setItem('taskItemList', JSON.stringify(taskItemList));
+  }
+
+  function getProjectListFromStorage() {
+    const projectListStorage = localStorage.getItem('projectList');
+    return JSON.parse(projectListStorage);
+  }
+
+  function getTaskItemListFromStorage() {
+    const taskItemListStorage = localStorage.getItem('taskItemList');
+    return JSON.parse(taskItemListStorage);
+  }
+
+  return {
+    updateProjectListStorage,
+    updateTaskListStorage,
+    getProjectListFromStorage,
+    getTaskItemListFromStorage,
+  }
+})();
+
 (function initialPageSetup() {
-  function _setupEventListeners() {
+  (function _setupEventListeners() {
     const sidebarAddProject = document.querySelector('.sidebar-add-project');
   
     const newProjectModalForm = document.querySelector('.new-project-modal');
@@ -462,13 +499,43 @@ const viewController = (() => {
     taskViewModalCloseBtn.addEventListener('click', (e) => {
       viewController.toggleFormModalVisibility('.task-view-modal-container');
     })
-  }
+  })();
 
-  _setupEventListeners();
+  // Loads projects from localStorage, if they exist,
+  // Create base constant section only otherwise
+  (function _setupProjects() {
+    const projectListStorage = storageController.getProjectListFromStorage();
+    
+    if (projectListStorage === null) {
+      projectController.newProject('General', true);
+      projectController.newProject('Today', true);
+      projectController.newProject('Upcoming', true);
+    } else {
+      projectListStorage.forEach(project => {
+        if ((project.id === 'general') || (project.id === 'today') || (project.id === 'upcoming')) {
+          projectController.newProject(project.title, true);
+        } else {
+          projectController.newProject(project.title, false);
+        }
+      })
+    }
+  })();
 
-  projectController.newProject('General', true);
-  projectController.newProject('Today', true);
-  projectController.newProject('Upcoming', true);
-  
+  (function _loadTasksFromStorage() {
+    const taskListStorage = storageController.getTaskItemListFromStorage();
+
+    if (taskListStorage === null) {
+      return;
+    }
+
+    taskListStorage.forEach(task => {
+      taskItemList.push(task);
+    });
+  })();
+
+  viewController.updateSidebarTaskCount();
+  const projectGeneral = document.querySelector('.sidebar-default-section > div');
+  viewController.onProjectSelect(projectGeneral);
+
   return {}
 })();
